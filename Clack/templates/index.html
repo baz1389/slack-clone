@@ -31,7 +31,7 @@
           },
 
           componentDidUpdate: function() {
-              $("#message-list").scrollTop($("#message-list*")[0].scrollHeight);
+              $("#message-list").scrollTop($("#message-list")[0].scrollHeight);
           },
 
           setName: function() {
@@ -39,7 +39,7 @@
             this.setState({name:myName});
           },
 
-          sendMessage: function() {
+          sendMessage: function(event) {
             var text = event.target.value;
             if (event.keyCode == 13 && text !== "") {
               var message = {
