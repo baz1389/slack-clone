@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var Messages = require('./Messages');
 
 var Chat = React.createClass({
   getInitialState: function() {
@@ -42,8 +43,6 @@ var Chat = React.createClass({
   },
 
   render: function() {
-
-    var messageList = this.state.messages.map(function(message, i) {
       return (
       <div>
         <div className="header">
@@ -71,7 +70,7 @@ var Chat = React.createClass({
           <div className="listings_direct-messages"></div>
           </div>
           <div className="message-history">
-
+            <Messages messages={this.state.messages}/>
           </div>
         </div>
         <div className="footer">
