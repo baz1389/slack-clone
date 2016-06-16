@@ -53,7 +53,8 @@ var Channels = React.createClass({
 
     return (
         <div className="listings_channels">
-            <span className="add_icon" onClick={this.openModal}>+</span> <h2 className="listings_header">Channels </h2>
+            <span className="add_icon" onClick={this.openModal}>+</span>
+            <h2 className="listings_header">Channels </h2>
             <ul className="channel_list">
                 {channelList}
             </ul>
