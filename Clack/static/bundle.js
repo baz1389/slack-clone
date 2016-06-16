@@ -114,27 +114,13 @@ var Chat = React.createClass({displayName: "Chat",
     };
   },
 
+  componentWillMount: function() {
+    this.pusher = new Pusher(PUSHER_CHAT_APP_KEY);
+    this.chatRooms = {};
+  },
+
   componentDidMount: function() {
     this.createChannel(DEFAULT_CHANNEL);
-
-    var messages = {};
-    messages[DEFAULT_CHANNEL] = [
-      {
-        name: 'CodeUpstart',
-        time: new Date(),
-        text: 'Hi there! 😘',
-      },
-      {
-        name: 'CodeUpstart',
-        time: new Date(),
-        text: 'Welcome to your chat app'
-      }
-    ]
-
-    this.setState({
-      messages: messages
-    })
-
   },
 
   componentDidUpdate: function() {
@@ -147,13 +133,13 @@ var Chat = React.createClass({displayName: "Chat",
       var message = {
         name: this.state.name,
         text: text,
-        time: new Date()
+        channel: this.state.currentChannel
       }
 
-      var messages = this.state.messages;
-      messages[this.state.currentChannel].push(message);
-      this.setState({messages: messages});
-      $('#msg-input').val("");
+      $.post('/messages/', message).success(function() {
+        $('#msg-input').val("");
+      });
+
     }
   },
 
