@@ -1,15 +1,20 @@
 <html>
   <head>
-    <link href="../custom.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/custom.css" rel="stylesheet" type="text/css"/>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
     <link href="http://fonts.googleapis.com/css?family=Lato:400,700,900" rel="stylesheet" type="text/css">
     <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="https://js.pusher.com/3.1/pusher.min.js"></script>
+    <script>
+      Pusher.log = function(msg) {console.log(msg);};
+      var PUSHER_CHAT_APP_KEY = "{{config['PUSHER_CHAT_APP_KEY']}}";
+    </script>
   </head>
   <body>
     <div id="app">
-      <script src="../bundle.js"></script>
+      <script src="../static/bundle.js"></script>
     </div>
   </body>
 </html>
