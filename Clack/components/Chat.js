@@ -15,23 +15,40 @@ const modalStyle = {
   }
 };
 
+const DEFAULT_CHANNEL = "general";
+
 var Chat = React.createClass({
   getInitialState: function() {
 
     return {
       name: null,
-      channels: ['general'],
-      messages: [{
+      channels: [],
+      messages: {},
+      currentChannel: null
+    };
+  },
+
+  componentDidMount: function() {
+    this.createChannel(DEFAULT_CHANNEL);
+
+    var messages = {};
+    messages[DEFAULT_CHANNEL] = [
+      {
         name: 'CodeUpstart',
         time: new Date(),
         text: 'Hi there! 😘',
-      },{
+      },
+      {
         name: 'CodeUpstart',
         time: new Date(),
         text: 'Welcome to your chat app'
-      }],
-      currentChannel: "general"
-    };
+      }
+    ]
+
+    this.setState({
+      messages: messages
+    })
+
   },
 
   componentDidUpdate: function() {
@@ -47,7 +64,9 @@ var Chat = React.createClass({
         time: new Date()
       }
 
-      this.setState({ messages: this.state.messages.concat(message)});
+      var messages = this.state.messages;
+      messages[this.state.currentChannel].push(message);
+      this.setState({messages: messages});
       $('#msg-input').val("");
     }
   },
@@ -55,7 +74,13 @@ var Chat = React.createClass({
   createChannel: function(channelName){
     if (!(channelName in this.state.channels)) {
       // Add new channel, if it doesn't exist yet
-      this.setState({ channels: this.state.channels.concat(channelName)});
+      var messages = this.state.messages;
+      messages[channelName] = [];
+
+      this.setState({
+        channels: this.state.channels.concat(channelName),
+        messages: messages
+      });
       this.joinChannel(channelName);
     }
   },
@@ -97,7 +122,7 @@ var Chat = React.createClass({
                 <div className="channel-menu">
                     <span className="channel-menu_name">
                         <span className="channel-menu_prefix">#</span>
-                        general
+                        {this.state.currentChannel}
                     </span>
                 </div>
             </div>
@@ -112,7 +137,7 @@ var Chat = React.createClass({
                   <div className="listings_direct-messages"></div>
                 </div>
                 <div className="message-history">
-                  <Messages messages={this.state.messages}/>
+                  <Messages messages={this.state.messages[this.state.currentChannel]}/>
                 </div>
             </div>
             <div className="footer">

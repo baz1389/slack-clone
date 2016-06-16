@@ -101,23 +101,40 @@ const modalStyle = {
   }
 };
 
+const DEFAULT_CHANNEL = "general";
+
 var Chat = React.createClass({displayName: "Chat",
   getInitialState: function() {
 
     return {
       name: null,
-      channels: ['general'],
-      messages: [{
+      channels: [],
+      messages: {},
+      currentChannel: null
+    };
+  },
+
+  componentDidMount: function() {
+    this.createChannel(DEFAULT_CHANNEL);
+
+    var messages = {};
+    messages[DEFAULT_CHANNEL] = [
+      {
         name: 'CodeUpstart',
         time: new Date(),
         text: 'Hi there! 😘',
-      },{
+      },
+      {
         name: 'CodeUpstart',
         time: new Date(),
         text: 'Welcome to your chat app'
-      }],
-      currentChannel: "general"
-    };
+      }
+    ]
+
+    this.setState({
+      messages: messages
+    })
+
   },
 
   componentDidUpdate: function() {
@@ -133,7 +150,9 @@ var Chat = React.createClass({displayName: "Chat",
         time: new Date()
       }
 
-      this.setState({ messages: this.state.messages.concat(message)});
+      var messages = this.state.messages;
+      messages[this.state.currentChannel].push(message);
+      this.setState({messages: messages});
       $('#msg-input').val("");
     }
   },
@@ -141,7 +160,13 @@ var Chat = React.createClass({displayName: "Chat",
   createChannel: function(channelName){
     if (!(channelName in this.state.channels)) {
       // Add new channel, if it doesn't exist yet
-      this.setState({ channels: this.state.channels.concat(channelName)});
+      var messages = this.state.messages;
+      messages[channelName] = [];
+
+      this.setState({
+        channels: this.state.channels.concat(channelName),
+        messages: messages
+      });
       this.joinChannel(channelName);
     }
   },
@@ -183,7 +208,7 @@ var Chat = React.createClass({displayName: "Chat",
                 React.createElement("div", {className: "channel-menu"}, 
                     React.createElement("span", {className: "channel-menu_name"}, 
                         React.createElement("span", {className: "channel-menu_prefix"}, "#"), 
-                        "general"
+                        this.state.currentChannel
                     )
                 )
             ), 
@@ -198,7 +223,7 @@ var Chat = React.createClass({displayName: "Chat",
                   React.createElement("div", {className: "listings_direct-messages"})
                 ), 
                 React.createElement("div", {className: "message-history"}, 
-                  React.createElement(Messages, {messages: this.state.messages})
+                  React.createElement(Messages, {messages: this.state.messages[this.state.currentChannel]})
                 )
             ), 
             React.createElement("div", {className: "footer"}, 
