@@ -30,7 +30,8 @@ var Chat = React.createClass({
         time: new Date(),
         text: 'Welcome to your chat app'
       }],
-    }
+      currentChannel: "general"
+    };
   },
 
   componentDidUpdate: function() {
@@ -55,7 +56,12 @@ var Chat = React.createClass({
     if (!(channelName in this.state.channels)) {
       // Add new channel, if it doesn't exist yet
       this.setState({ channels: this.state.channels.concat(channelName)});
+      this.joinChannel(channelName);
     }
+  },
+
+  joinChannel: function(channelName) {
+    this.setState({currentChannel: channelName});
   },
 
   enterName: function(event){
@@ -97,7 +103,12 @@ var Chat = React.createClass({
             </div>
             <div className="main">
                 <div className="listings">
-                  <Channels channels={this.state.channels} createChannel={this.createChannel}/>
+                  <Channels
+                    channels={this.state.channels} createChannel={this.createChannel}
+                    createChannel={this.createChannel}
+                    currentChannel={this.state.currentChannel}
+                    joinChannel={this.joinChannel}
+                  />
                   <div className="listings_direct-messages"></div>
                 </div>
                 <div className="message-history">
